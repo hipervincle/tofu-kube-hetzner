@@ -3,6 +3,8 @@ FROM alpine:3.22
 ARG PRODUCT="packer"
 ARG VERSION="1.14.2"
 ARG TERRAFORM_DOCS_VERSION="v0.20.0"
+ARG GIT_USER_NAME=${GIT_USER_NAME}
+ARG GIT_USER_EMAIL=${GIT_USER_EMAIL}
 
 RUN apk update && apk add --no-cache \
     bat \
@@ -51,15 +53,9 @@ RUN wget https://releases.hashicorp.com/${PRODUCT}/${VERSION}/${PRODUCT}_${VERSI
 
 WORKDIR /root
 
-ARG GIT_USER_NAME
-ARG GIT_USER_EMAIL
-
-ENV GIT_USER_NAME=${GIT_USER_NAME}
-ENV GIT_USER_EMAIL=${GIT_USER_EMAIL}
-
 RUN git config --global --add safe.directory '*' && \
-    git config --global user.name "${GIT_USER_NAME}" && \
-    git config --global user.email "${GIT_USER_EMAIL}" && \
+    git config --global user.name ${GIT_USER_NAME} && \
+    git config --global user.email ${GIT_USER_EMAIL} && \
     git config --global pull.rebase true && \
     git config --global gpg.format "ssh" && \
     git config --global commit.gpgsign true && \

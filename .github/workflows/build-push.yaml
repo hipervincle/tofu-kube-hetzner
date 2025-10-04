@@ -30,7 +30,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=semver,pattern={{major}}{{minor}},value=1.0
+            type=semver,pattern={{version}},value=1.0.0
             type=raw,value=latest
             type=ref,event=tag
             type=sha,format=short
@@ -40,8 +40,8 @@ jobs:
           context: .
           file: .github/Dockerfile
           build-args: |
-            GIT_AUTHOR_NAME=${{ github.actor }}
-            GIT_AUTHOR_EMAIL=${{ vars.DEFAULT_GIT_EMAIL }}
+            GIT_USER_NAME=${{ github.actor }}
+            GIT_USER_EMAIL=${{ vars.DEFAULT_GIT_EMAIL }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
