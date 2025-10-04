@@ -1,0 +1,37 @@
+{
+	"image": "ghcr.io/hipervincle/tofu-kube-hetzner:latest",
+  "features": {
+    "ghcr.io/hipervincle/devcontainers-features/alpine-ohmyzsh:latest": {}
+},
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "cottonable.perplexity",
+        "pkief.material-icon-theme",
+        "sonarsource.sonarlint-vscode",
+        "yzhang.markdown-all-in-one",
+        "ms-azuretools.vscode-containers",
+        "github.vscode-github-actions",
+        "gruntfuggly.todo-tree",
+        "opentofu.vscode-opentofu"
+      ],
+      "settings": {
+        "sonarlint.ls.javaHome": "/usr/lib/jvm/java-21-openjdk",
+        "sonarlint.pathToNodeExecutable": "/usr/bin/node",
+        "workbench.colorTheme": "Perplexity Theme",
+        "workbench.iconTheme": "material-icon-theme",
+        "editor.formatOnSave": true,
+        "editor.tabSize": 2,
+        "terminal.integrated.defaultProfile.linux": "zsh",
+          "zsh": {
+            "path": "zsh"
+          }
+        }
+      }
+    },
+  "mounts": [
+    "type=bind,source=${localEnv:HOME}${env:USERPROFILE}/.ssh,target=/root/.ssh",
+    "type=bind,source=${localEnv:HOME}${env:USERPROFILE}/.zshrc,target=/root/.zshrc",
+    "type=bind,source=${localEnv:HOME}${env:USERPROFILE}/.p10k.zsh,target=/root/.p10k.zsh"
+   ]
+}
