@@ -1,7 +1,11 @@
 {
 	"image": "ghcr.io/hipervincle/tofu-kube-hetzner:latest",
   "features": {
-    "ghcr.io/hipervincle/devcontainers-features/alpine-ohmyzsh:latest": {}
+    "ghcr.io/hipervincle/devcontainers-features/alpine-ohmyzsh:latest": {
+      "plugins": "ssh-agent kubectl sudo web-search copyfile copybuffer dirhistory history powerlevel10k",
+      "zshTheme": "powerlevel10k/powerlevel10k",
+      "zshPath": "/usr/share/omz"
+    }
 },
   "customizations": {
     "vscode": {
