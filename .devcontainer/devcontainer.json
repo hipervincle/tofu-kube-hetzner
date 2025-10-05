@@ -1,5 +1,5 @@
 {
-  "image": "ghcr.io/hipervincle/tofu-kube-hetzner:latest",
+  "image": "ghcr.io/hipervincle/tofu-kube-hetzner:1.0.1",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -12,7 +12,7 @@
         "hashicorp.terraform"
       ],
       "settings": {
-        "sonarlint.ls.javaHome": "/usr/lib/jvm/java-21-openjdk",
+        "sonarlint.ls.javaHome": "/usr/lib/jvm/java-25-openjdk-amd64",
         "sonarlint.pathToNodeExecutable": "/usr/bin/node",
         "workbench.colorTheme": "Perplexity Theme",
         "workbench.iconTheme": "material-icon-theme",
@@ -25,6 +25,10 @@
       }
     }
   },
+  // Ensure the devcontainer starts with a predictable hostname and HOSTNAME env var
+  "runArgs": [
+    "--hostname=trixie-devcontainer"
+  ],
   "mounts": [
     "type=bind,source=${localEnv:HOME}${env:USERPROFILE}/.ssh,target=/root/.ssh",
     "type=bind,source=${localEnv:HOME}${env:USERPROFILE}/.zshrc,target=/root/.zshrc",

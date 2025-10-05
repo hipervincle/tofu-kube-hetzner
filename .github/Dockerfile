@@ -1,4 +1,6 @@
-FROM alpine:3.22
+FROM debian:trixie
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 ARG PRODUCT="packer"
 ARG VERSION="1.14.2"
@@ -6,39 +8,50 @@ ARG TERRAFORM_DOCS_VERSION="v0.20.0"
 ARG GIT_USER_NAME=${GIT_USER_NAME}
 ARG GIT_USER_EMAIL=${GIT_USER_EMAIL}
 
-RUN apk update && apk add --no-cache \
-    bat \
+RUN \
+    # Install basic tools
+    apt-get update && apt-get install --no-install-recommends -y \
     ca-certificates \
-    coreutils \
     curl \
-    eza \
-    fd \
-    fzf \
-    git \
-    github-cli \
     gnupg \
-    grep \
-    hcloud \
+    wget && \
+    # Add keyrings and repositories
+    mkdir -p -m 755 /etc/apt/keyrings && \
+    out=$(mktemp) && \
+    wget -nv -O "$out" https://cli.github.com/packages/githubcli-archive-keyring.gpg && \
+    cat "$out" | tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null && \
+    chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg && \
+    mkdir -p -m 755 /etc/apt/sources.list.d && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | \
+    tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
+    curl -fsSL https://get.opentofu.org/opentofu.gpg | tee /etc/apt/keyrings/opentofu.gpg >/dev/null && \
+    curl -fsSL https://packages.opentofu.org/opentofu/tofu/gpgkey | gpg --no-tty --batch --dearmor -o /etc/apt/keyrings/opentofu-repo.gpg >/dev/null && \
+    chmod a+r /etc/apt/keyrings/opentofu.gpg /etc/apt/keyrings/opentofu-repo.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/opentofu.gpg,/etc/apt/keyrings/opentofu-repo.gpg] https://packages.opentofu.org/opentofu/tofu/any/ any main \
+    deb-src [signed-by=/etc/apt/keyrings/opentofu.gpg,/etc/apt/keyrings/opentofu-repo.gpg] https://packages.opentofu.org/opentofu/tofu/any/ any main" | \
+    tee /etc/apt/sources.list.d/opentofu.list > /dev/null && \
+    chmod a+r /etc/apt/sources.list.d/opentofu.list && \
+    # Install packages
+    apt-get update && \
+    apt-get install --no-install-recommends -y \
+    bat \
+    eza \
+    fd-find \
+    fzf \
+    gh \
+    git \
+    hcloud-cli \
     kubectl \
-    libffi-dev \
-    linux-headers \
-    musl-dev \
     nodejs \
-    openjdk21-jre \
+    openjdk-25-jre \
     openssh-client \
-    opentofu \
     pre-commit \
-    py3-pip \
-    python3 \
-    sed \
-    the_silver_searcher \
-    tzdata \
+    silversearcher-ag \
+    tofu \
     unzip \
     vim \
-    wget \
-    which \
-    zip \
-    zsh 
+    zsh && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /tmp
 
