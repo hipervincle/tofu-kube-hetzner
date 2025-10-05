@@ -8,10 +8,12 @@ ARG GIT_USER_EMAIL=${GIT_USER_EMAIL}
 
 RUN apk update && apk add --no-cache \
     bat \
+    ca-certificates \
     coreutils \
     curl \
     eza \
     fd \
+    fzf \
     git \
     github-cli \
     gnupg \
@@ -26,16 +28,20 @@ RUN apk update && apk add --no-cache \
     openssh-client \
     opentofu \
     pre-commit \
+    py3-pip \
+    python3 \
     sed \
     the_silver_searcher \
     tzdata \
     unzip \
+    vim \
     wget \
     which \
     zip \
     zsh 
 
 WORKDIR /tmp
+
 # Install and verify packer
 RUN wget https://releases.hashicorp.com/${PRODUCT}/${VERSION}/${PRODUCT}_${VERSION}_linux_amd64.zip && \
     wget https://releases.hashicorp.com/${PRODUCT}/${VERSION}/${PRODUCT}_${VERSION}_SHA256SUMS && \
@@ -45,6 +51,7 @@ RUN wget https://releases.hashicorp.com/${PRODUCT}/${VERSION}/${PRODUCT}_${VERSI
     grep ${PRODUCT}_${VERSION}_linux_amd64.zip ${PRODUCT}_${VERSION}_SHA256SUMS | sha256sum -c && \
     unzip ${PRODUCT}_${VERSION}_linux_amd64.zip -d /usr/local/bin && \
     chmod +x /usr/local/bin/${PRODUCT} && \
+    rm -rf /tmp/packer_* && \
     # Install terraform-docs
     curl -Lo /terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/${TERRAFORM_DOCS_VERSION}/terraform-docs-${TERRAFORM_DOCS_VERSION}-$(uname)-amd64.tar.gz && \
     tar -xzf /terraform-docs.tar.gz -C /usr/local/bin && \
@@ -54,8 +61,8 @@ RUN wget https://releases.hashicorp.com/${PRODUCT}/${VERSION}/${PRODUCT}_${VERSI
 WORKDIR /root
 
 RUN git config --global --add safe.directory '*' && \
-    git config --global user.name ${GIT_USER_NAME} && \
-    git config --global user.email ${GIT_USER_EMAIL} && \
+    git config --global user.name "${GIT_USER_NAME}" && \
+    git config --global user.email "${GIT_USER_EMAIL}" && \
     git config --global pull.rebase true && \
     git config --global gpg.format "ssh" && \
     git config --global commit.gpgsign true && \
