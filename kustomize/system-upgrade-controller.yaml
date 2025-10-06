@@ -6,8 +6,18 @@ metadata:
 spec:
   template:
     spec:
+      serviceAccountName: system-upgrade
       containers:
         - name: system-upgrade-controller
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+              ephemeral-storage: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+              ephemeral-storage: "512Mi"
           volumeMounts:
             - name: ca-certificates
               mountPath: /var/lib/ca-certificates
