@@ -1,0 +1,6 @@
+{
+  "sonarlint.connectedMode.project": {
+    "connectionId": "hipervincle",
+    "projectKey": "hipervincle_tofu-kube-hetzner"
+  }
+}
